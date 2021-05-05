@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://tilemap/astar_map.tscn" type="PackedScene" id=1]
+[ext_resource path="res://tilemap/astar_map.gd" type="Script" id=2]
+[ext_resource path="res://character/character.tscn" type="PackedScene" id=3]
+
+[node name="astar" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 512, 300 )
+current = true
+smoothing_enabled = true
+
+[node name="TileMap" parent="." instance=ExtResource( 1 )]
+tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 65536, 0, 0, 65538, 0, 0, 65539, 0, 0, 65540, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0, 196608, 0, 0, 196609, 0, 0, 196610, 0, 0, 196611, 0, 0, 196612, 0, 0, 262144, 0, 0, 262145, 0, 0, 262146, 0, 0, 262147, 0, 0, 262148, 0, 0, 524302, 0, 0 )
+script = ExtResource( 2 )
+map_size = Vector2( 20, 20 )
+
+[node name="start" type="Position2D" parent="."]
+visible = false
+position = Vector2( 99, 221 )
+
+[node name="end" type="Position2D" parent="."]
+position = Vector2( 900, 183 )
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[node name="character" parent="." instance=ExtResource( 3 )]
