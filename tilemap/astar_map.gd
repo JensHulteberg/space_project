@@ -11,6 +11,9 @@ onready var astar_node = AStar2D.new()
 onready var _half_cell_size = cell_size / 2
 var obstacles
 
+onready var hunger = get_tree().get_nodes_in_group("hunger")
+onready var thirst = get_tree().get_nodes_in_group("thirst")
+
 signal map_recalculated
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -21,7 +24,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	var click_pos = world_to_map(event.position)
 	var clicked_tile_index = get_cellv(click_pos)
 	
-	print(click_pos)
 	
 	if clicked_tile_index == 0:
 		set_cellv(click_pos, -1)
