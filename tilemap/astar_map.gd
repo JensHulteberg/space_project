@@ -103,6 +103,9 @@ func change_tile_to(index, tile_pos):
 func how_close_is(node):
 	return (astar_node.get_closest_position_in_segment(world_to_map(node.position)) - world_to_map(node.position)).length()
 
+func change_weight_of_tile(position, weight):
+	astar_node.set_point_weight_scale(calculate_point_index(world_to_map(position)), weight)
+
 func _set_path_start_position(value):
 	if not value in obstacles:
 		return

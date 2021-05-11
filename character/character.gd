@@ -47,7 +47,6 @@ func _sort_out_priorities():
 
 func build():
 	for i in map.to_be_built.size():
-			print(map.how_close_is(map.to_be_built[i]))
 			if map.how_close_is(map.to_be_built[i]) <= 1:
 				set_path_to(map.to_be_built[i])
 				return
@@ -68,9 +67,13 @@ func _try_to_interact():
 	if typeof(goal) == 5:
 		return false
 	
-	if goal and goal.in_interaction_area(self):
-		if goal.has_method("act"):
-			goal.act(self)
+	if !is_instance_valid(goal):
+		return false
+	
+	if goal:
+		if goal.in_interaction_area(self):
+			if goal.has_method("act"):
+				goal.act(self)
 		return
 	
 	return false
