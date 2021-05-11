@@ -13,6 +13,7 @@ var obstacles
 
 onready var hunger = get_tree().get_nodes_in_group("hunger")
 onready var thirst = get_tree().get_nodes_in_group("thirst")
+var to_be_built = []
 
 signal map_recalculated
 
@@ -25,12 +26,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	var clicked_tile_index = get_cellv(click_pos)
 	
 	
-	if clicked_tile_index == 0:
-		set_cellv(click_pos, -1)
-	elif clicked_tile_index == -1:
-		set_cellv(click_pos, 0)
-	
-	recalculate_walkable_cells()
+	if clicked_tile_index == -1:
+		var build_indicator = Global.get_a_node("res://to_be_built/to_be_built.tscn")
+		add_child(build_indicator)
+		build_indicator.position = map_to_world(click_pos) + _half_cell_size
+		to_be_built.append(build_indicator)
 	
 
 func _ready():
@@ -96,20 +96,26 @@ func _recalculate_path():
 func is_outside_map_boundries(point):
 	return point.x < 0 or point.y < 0 or point.x >= map_size.x or point.y >= map_size.y
 
+func change_tile_to(index, tile_pos):
+	set_cellv(tile_pos, index)
+	recalculate_walkable_cells()
+
+func how_close_is(node):
+	return (astar_node.get_closest_position_in_segment(world_to_map(node.position)) - world_to_map(node.position)).length()
+
 func _set_path_start_position(value):
 	if not value in obstacles:
 		return
 	if is_outside_map_boundries(value):
 		return
 	path_start_position = value
-	if path_end_position and path_end_position != path_start_position:
-		_recalculate_path()
 
 func _set_path_end_position(value):
 	if not value in obstacles:
+		print("Value: " + String(value) + " is not in walkable tiles. Instead sets a closeby tile: " + String(astar_node.get_closest_position_in_segment(value)))
+		path_end_position = astar_node.get_closest_position_in_segment(value)
 		return
 	if is_outside_map_boundries(value):
+		path_end_position = astar_node.get_closest_position_in_segment(value)
 		return
 	path_end_position = value
-	if path_start_position != value:
-		_recalculate_path()

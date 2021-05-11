@@ -1,11 +1,5 @@
 extends Node2D
 
-export(String, "hunger", "thirst", "NONE") var need
-
-var target = null
-
-func _ready():
-	add_to_group(need)
 
 func in_interaction_area(object):
 	var overlapping_areas = $Area2D.get_overlapping_areas()
@@ -15,6 +9,10 @@ func in_interaction_area(object):
 	return false
 
 func act(target):
-	print("Filling up: " + String(need))
-	target.needs[need] += 100
+	var map_pos = get_parent().world_to_map(position)
+	get_parent().change_tile_to(0, map_pos)
+	die()
 
+func die():
+	get_parent().to_be_built.erase(self)
+	queue_free()

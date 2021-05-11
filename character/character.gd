@@ -30,8 +30,8 @@ func _move_to_next_node():
 	initiate_movement()
 
 func _decrease_needs():
-	needs.hunger -= 5
-	needs.thirst -= 8
+	needs.hunger -= 1
+	needs.thirst -= 2
 	
 	for key in needs:
 		if needs[key] < 0:
@@ -42,6 +42,15 @@ func _sort_out_priorities():
 		set_path_to(map.hunger[0])
 	elif needs.thirst <= 20:
 		set_path_to(map.thirst[0])
+	elif map.to_be_built:
+		build()
+
+func build():
+	for i in map.to_be_built.size():
+			print(map.how_close_is(map.to_be_built[i]))
+			if map.how_close_is(map.to_be_built[i]) <= 1:
+				set_path_to(map.to_be_built[i])
+				return
 
 func set_path_to(new_goal):
 	if goal:
@@ -52,12 +61,14 @@ func set_path_to(new_goal):
 		path = map.get_astar_path(position, goal)
 	else:
 		path = map.get_astar_path(position, goal.position)
-	
+	$"../Line2D".points = path
+
 
 func _try_to_interact():
 	if typeof(goal) == 5:
 		return false
-	if goal and position == goal.position:
+	
+	if goal and goal.in_interaction_area(self):
 		if goal.has_method("act"):
 			goal.act(self)
 		return
@@ -88,4 +99,3 @@ func _on_Timer_timeout():
 	_decrease_needs()
 	_sort_out_priorities()
 	_move_to_next_node()
-	

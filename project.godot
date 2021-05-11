@@ -19,6 +19,10 @@ config/name="space_ship_game"
 run/main_scene="res://root.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://Global.tscn"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
