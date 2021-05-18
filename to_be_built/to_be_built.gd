@@ -12,8 +12,7 @@ func in_interaction_area(object):
 func act(target):
 	count -= 1
 	if count <= 0:
-		var map_pos = get_parent().world_to_map(position)
-		get_parent().change_tile_to(0, map_pos)
+		get_parent().change_tile_to(0, position)
 		die()
 
 func die():

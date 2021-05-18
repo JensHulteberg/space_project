@@ -37,9 +37,10 @@ func _ready():
 	recalculate_walkable_cells()
 
 func recalculate_walkable_cells():
-	astar_node.clear()
+	#astar_node.clear()
 	obstacles = get_used_cells_by_id(0)
-	map_size = get_used_rect().end
+	#map_size = get_used_rect().end
+	map_size = Vector2(20, 20)
 	var walkable_cells_list = astar_add_walkable_cells(obstacles)
 	astar_connect_walkable_cells(walkable_cells_list)
 	emit_signal("map_recalculated")
@@ -52,8 +53,11 @@ func astar_add_walkable_cells(obstacle_list = []):
 			if not point in obstacle_list:
 				continue
 			points_array.append(point)
-			var point_index = calculate_point_index(point)
-			astar_node.add_point(point_index, point)
+			if not calculate_point_index(point) in astar_node.get_points():
+				print("Is: " + String(calculate_point_index(point)) + " in " + String(astar_node.get_points()))
+				var point_index = calculate_point_index(point)
+				astar_node.add_point(point_index, point)
+	print(points_array)
 	return points_array
 
 func astar_connect_walkable_cells(point_array):
@@ -97,7 +101,9 @@ func is_outside_map_boundries(point):
 	return point.x < 0 or point.y < 0 or point.x >= map_size.x or point.y >= map_size.y
 
 func change_tile_to(index, tile_pos):
-	set_cellv(tile_pos, index)
+	set_cellv(world_to_map(tile_pos), index)
+	#astar_node.add_point(calculate_point_index(world_to_map(tile_pos)), world_to_map(tile_pos))
+	#emit_signal("map_recalculated")
 	recalculate_walkable_cells()
 
 func how_close_is(node):
@@ -105,6 +111,7 @@ func how_close_is(node):
 
 func change_weight_of_tile(position, weight):
 	astar_node.set_point_weight_scale(calculate_point_index(world_to_map(position)), weight)
+	print(astar_node.get_point_weight_scale(calculate_point_index(world_to_map(position))))
 
 func _set_path_start_position(value):
 	if not value in obstacles:

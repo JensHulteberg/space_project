@@ -31,7 +31,7 @@ func _move_to_next_node():
 
 func _decrease_needs():
 	needs.hunger -= 1
-	needs.thirst -= 2
+	needs.thirst -= 3
 	
 	for key in needs:
 		if needs[key] < 0:
@@ -82,7 +82,7 @@ func _on_map_recalculated():
 	initiate_movement()
 
 func _idle_for_tick():
-	print("Idling")
+	return
 	var point = position
 	var points_relative = PoolVector2Array([
 				point + Vector2.RIGHT * map.cell_size,
