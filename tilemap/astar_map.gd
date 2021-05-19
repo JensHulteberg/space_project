@@ -14,6 +14,7 @@ var obstacles
 onready var hunger = get_tree().get_nodes_in_group("hunger")
 onready var thirst = get_tree().get_nodes_in_group("thirst")
 var to_be_built = []
+var fire = []
 
 signal map_recalculated
 

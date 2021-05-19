@@ -30,8 +30,8 @@ func _move_to_next_node():
 	initiate_movement()
 
 func _decrease_needs():
-	needs.hunger -= 10
-	needs.thirst -= 20
+	needs.hunger -= 0.1
+	needs.thirst -= 0.2
 	
 	for key in needs:
 		if needs[key] < 0:
@@ -47,11 +47,19 @@ func _sort_out_priorities():
 	elif map.to_be_built:
 		build()
 		print("Going to build")
+	elif map.fire:
+		firefight()
 
 func build():
 	for i in map.to_be_built.size():
 			if map.how_close_is(map.to_be_built[i]) <= 1:
 				set_path_to(map.to_be_built[i])
+				return
+
+func firefight():
+	for i in map.fire.size():
+			if map.how_close_is(map.fire[i]) <= 1:
+				set_path_to(map.fire[i])
 				return
 
 func set_path_to(new_goal):
