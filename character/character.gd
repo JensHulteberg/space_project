@@ -30,8 +30,8 @@ func _move_to_next_node():
 	initiate_movement()
 
 func _decrease_needs():
-	needs.hunger -= 1
-	needs.thirst -= 3
+	needs.hunger -= 10
+	needs.thirst -= 20
 	
 	for key in needs:
 		if needs[key] < 0:
@@ -40,10 +40,13 @@ func _decrease_needs():
 func _sort_out_priorities():
 	if needs.hunger <= 20:
 		set_path_to(map.hunger[0])
+		print("Going to eat")
 	elif needs.thirst <= 20:
 		set_path_to(map.thirst[0])
+		print("Going to drink")
 	elif map.to_be_built:
 		build()
+		print("Going to build")
 
 func build():
 	for i in map.to_be_built.size():
@@ -82,7 +85,6 @@ func _on_map_recalculated():
 	initiate_movement()
 
 func _idle_for_tick():
-	return
 	var point = position
 	var points_relative = PoolVector2Array([
 				point + Vector2.RIGHT * map.cell_size,

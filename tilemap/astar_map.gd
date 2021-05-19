@@ -54,10 +54,8 @@ func astar_add_walkable_cells(obstacle_list = []):
 				continue
 			points_array.append(point)
 			if not calculate_point_index(point) in astar_node.get_points():
-				print("Is: " + String(calculate_point_index(point)) + " in " + String(astar_node.get_points()))
 				var point_index = calculate_point_index(point)
 				astar_node.add_point(point_index, point)
-	print(points_array)
 	return points_array
 
 func astar_connect_walkable_cells(point_array):
@@ -111,7 +109,35 @@ func how_close_is(node):
 
 func change_weight_of_tile(position, weight):
 	astar_node.set_point_weight_scale(calculate_point_index(world_to_map(position)), weight)
-	print(astar_node.get_point_weight_scale(calculate_point_index(world_to_map(position))))
+
+func whats_on_this_tile(position):
+	var objects = []
+	for object in get_children():
+		if world_to_map(object.position) == world_to_map(position):
+			objects.append(object)
+			
+	return objects
+
+func check_duplicate(node, tile_position):
+	for object in whats_on_this_tile(tile_position):
+		if object.get_filename() == node.get_filename():
+			return false
+	return true
+
+func get_free_relative(node):
+	var point = node.position
+	var points_relative = PoolVector2Array([
+				point + Vector2.RIGHT * cell_size,
+				point + Vector2.LEFT * cell_size,
+				point + Vector2.DOWN * cell_size,
+				point + Vector2.UP * cell_size,
+			])
+	randomize()
+	var index_list = [0, 1, 2, 3]
+	index_list.shuffle()
+	for x in index_list:
+		if world_to_map(points_relative[x]) in obstacles and check_duplicate(node, points_relative[x]):
+			return points_relative[x]
 
 func _set_path_start_position(value):
 	if not value in obstacles:
